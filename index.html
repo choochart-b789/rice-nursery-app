@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Rice Nursery [IOT EDITION]</title>
+    <title>ระบบบริหารจัดการฟาร์มเพาะกล้าข้าวอัจฉริยะ</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -15,180 +15,157 @@
             font-family: 'Prompt', sans-serif;
             background-color: #f4f7f5;
         }
-        .nav-scroll::-webkit-scrollbar {
-            height: 4px;
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 5px;
         }
-        .nav-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
         }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden text-slate-800">
+<body class="flex h-screen overflow-hidden text-slate-800">
 
-    <!-- TOP NAVBAR DESIGN -->
-    <header class="bg-[#1b4d2e] text-white shadow-md z-30 flex-shrink-0">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="w-72 bg-[#1b4d2e] text-white flex flex-col transition-all duration-300 z-40 fixed md:relative h-full -translate-x-full md:translate-x-0 shadow-2xl">
+        <div class="p-5 border-b border-emerald-800/60 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-11 h-11 rounded-xl bg-amber-400 flex items-center justify-center text-emerald-950 font-bold text-xl shadow-inner">
+                <div class="w-10 h-10 rounded-xl bg-amber-400 flex items-center justify-center text-emerald-950 font-bold text-xl shadow-inner">
                     <i class="fa-solid fa-seedling"></i>
                 </div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="font-bold text-lg text-white leading-tight">Smart Rice Nursery</h1>
-                        <span class="text-[10px] bg-amber-400 text-emerald-950 px-2 py-0.5 rounded-full font-bold">IOT EDITION</span>
-                    </div>
-                    <p class="text-xs text-emerald-200">ระบบบริหารจัดการแปลงเพาะกล้าข้าวอัจฉริยะด้วยเทคโนโลยีแม่นยำ</p>
+                    <h1 class="font-bold text-lg text-white leading-tight">ฟาร์มเพาะกล้าข้าว</h1>
+                    <span class="text-xs text-emerald-300 flex items-center gap-1">
+                        <i class="fa-solid fa-cloud text-[10px]"></i> Smart Farm v3.0
+                    </span>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="text-xs bg-emerald-900/60 border border-emerald-700 px-3 py-1.5 rounded-xl text-emerald-200 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> เซนเซอร์ IoT ทำงานปกติ
-                </span>
-            </div>
+            <button onclick="toggleSidebar()" class="md:hidden text-emerald-300 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
         </div>
 
-        <!-- MAIN SUB-NAVBAR MENU (14 เมนูหลักจัดกลุ่มแบบทันสมัย) -->
-        <nav class="bg-[#143a22] border-t border-emerald-800/60 px-4 py-2 flex overflow-x-auto nav-scroll gap-2">
-            <!-- ภาพรวม -->
-            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-semibold transition-all bg-[#6dbf43] text-emerald-950 shadow-sm flex items-center gap-2">
-                <i class="fa-solid fa-house"></i> หน้าหลัก/ภาพรวม
-            </button>
-            
-            <!-- จัดซื้อ & สต็อก -->
-            <button onclick="switchTab('purchase')" id="btn-purchase" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-cart-shopping"></i> สั่งซื้อเมล็ด/วัสดุ
-            </button>
-            <button onclick="switchTab('receive')" id="btn-receive" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-box-archive"></i> ตรวจรับสินค้า
-            </button>
-            <button onclick="switchTab('stock')" id="btn-stock" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-warehouse"></i> สต็อกกลาง
-            </button>
-            <button onclick="switchTab('daily-expense')" id="btn-daily-expense" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-receipt"></i> ค่าใช้จ่ายประจำวัน
-            </button>
+        <div class="flex-1 overflow-y-auto p-4 space-y-6 sidebar-scroll">
+            <div>
+                <p class="text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-2 px-3">ภาพรวม</p>
+                <div class="space-y-1">
+                    <button onclick="switchTab('dashboard')" id="btn-dashboard" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all bg-[#6dbf43] text-emerald-950 shadow-md">
+                        <i class="fa-solid fa-house w-5"></i><span>หน้าหลัก</span>
+                    </button>
+                </div>
+            </div>
 
-            <!-- การผลิต (แปลงเพาะกล้า) -->
-            <button onclick="switchTab('tray-prep')" id="btn-tray-prep" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-layer-group"></i> ลงดิน/ลงถาด
-            </button>
-            <button onclick="switchTab('nursery-records')" id="btn-nursery-records" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-plant-wilt"></i> บันทึกเพาะปลูก
-            </button>
-            <button onclick="switchTab('yield-forecast')" id="btn-yield-forecast" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-chart-line"></i> คาดการณ์ผลผลิต
-            </button>
-            <button onclick="switchTab('harvest')" id="btn-harvest" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-scissors"></i> ตัด & แบ่งบรรจุ
-            </button>
+            <div>
+                <p class="text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-2 px-3">จัดซื้อ & สต็อก</p>
+                <div class="space-y-1">
+                    <button onclick="switchTab('purchase')" id="btn-purchase" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-cart-shopping w-5"></i><span>สั่งซื้อเมล็ด/วัสดุ</span>
+                    </button>
+                    <button onclick="switchTab('receive')" id="btn-receive" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-box-archive w-5"></i><span>ตรวจรับสินค้า</span>
+                    </button>
+                    <button onclick="switchTab('stock')" id="btn-stock" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-warehouse w-5"></i><span>สต็อกกลาง (แกลบ/ถาด/ปุ๋ย)</span>
+                    </button>
+                    <button onclick="switchTab('daily-expense')" id="btn-daily-expense" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-receipt w-5"></i><span>ค่าใช้จ่ายประจำวัน</span>
+                    </button>
+                </div>
+            </div>
 
-            <!-- ขาย & เก็บเงิน -->
-            <button onclick="switchTab('ready-stock')" id="btn-ready-stock" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-tag"></i> สต็อกรอจำหน่าย
-            </button>
-            <button onclick="switchTab('sales-record')" id="btn-sales-record" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-money-bill-wave"></i> บันทึกการขาย
-            </button>
-            <button onclick="switchTab('pending-income')" id="btn-pending-income" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-hourglass-half"></i> รายได้รอรับ
-            </button>
+            <div>
+                <p class="text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-2 px-3">การผลิต (แปลงเพาะกล้า)</p>
+                <div class="space-y-1">
+                    <button onclick="switchTab('tray-prep')" id="btn-tray-prep" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-layer-group w-5"></i><span>ลงดิน/ลงถาดเพาะ</span>
+                    </button>
+                    <button onclick="switchTab('nursery-records')" id="btn-nursery-records" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-plant-wilt w-5"></i><span>บันทึกการเพาะปลูก</span>
+                    </button>
+                    <button onclick="switchTab('yield-forecast')" id="btn-yield-forecast" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-chart-line w-5"></i><span>คาดการณ์ผลผลิต</span>
+                    </button>
+                    <button onclick="switchTab('harvest')" id="btn-harvest" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-scissors w-5"></i><span>ตัด & แบ่งบรรจุ</span>
+                    </button>
+                </div>
+            </div>
 
-            <!-- บัญชี & การเงิน -->
-            <button onclick="switchTab('cashbook')" id="btn-cashbook" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-book text-red-300"></i> สมุดรายรับ-รายจ่าย
-            </button>
-            <button onclick="switchTab('ledger')" id="btn-ledger" class="nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2">
-                <i class="fa-solid fa-book-open text-emerald-300"></i> บัญชีแยกประเภท
-            </button>
-        </nav>
-    </header>
+            <div>
+                <p class="text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-2 px-3">ขาย & เก็บเงิน</p>
+                <div class="space-y-1">
+                    <button onclick="switchTab('ready-stock')" id="btn-ready-stock" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-tag w-5"></i><span>สต็อกรอจำหน่าย</span>
+                    </button>
+                    <button onclick="switchTab('sales-record')" id="btn-sales-record" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-money-bill-wave w-5"></i><span>บันทึกการขาย</span>
+                    </button>
+                    <button onclick="switchTab('pending-income')" id="btn-pending-income" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-hourglass-half w-5"></i><span>รายได้รอรับ</span>
+                    </button>
+                </div>
+            </div>
 
-    <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
-        <div class="max-w-7xl mx-auto space-y-6">
+            <div>
+                <p class="text-xs font-semibold text-emerald-300 uppercase tracking-wider mb-2 px-3">บัญชี & การเงิน</p>
+                <div class="space-y-1">
+                    <button onclick="switchTab('cashbook')" id="btn-cashbook" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-book w-5 text-red-300"></i><span>สมุดรายรับ-รายจ่าย</span>
+                    </button>
+                    <button onclick="switchTab('ledger')" id="btn-ledger" class="menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all">
+                        <i class="fa-solid fa-book-open w-5 text-emerald-300"></i><span>บัญชีแยกประเภท</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 border-t border-emerald-800/60 text-xs text-emerald-300 text-center">
+            Smart Rice Nursery v3.0
+        </div>
+    </aside>
+
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 z-20 shadow-sm">
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-600 hover:text-emerald-700">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <h2 id="current-page-title" class="font-bold text-lg text-slate-800">หน้าหลัก</h2>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="text-xs font-semibold px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> ระบบเซนเซอร์ออนไลน์
+                </span>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
 
             <!-- 1. DASHBOARD -->
             <section id="tab-dashboard" class="tab-content space-y-6">
-                <!-- Banner ต้อนรับ -->
-                <div class="bg-gradient-to-r from-[#1b4d2e] to-[#2c6b43] text-white p-6 rounded-3xl shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="space-y-2">
-                        <h2 class="text-xl font-bold flex items-center gap-2">
-                            ยินดีต้อนรับสู่ระบบเกษตรอัจฉริยะข้าวไทย <i class="fa-solid fa-seedling text-amber-400"></i>
-                        </h2>
-                        <p class="text-xs text-emerald-100 max-w-2xl leading-relaxed">เพิ่มประสิทธิภาพการเพาะกล้าข้าวด้วยระบบอัตโนมัติ ควบคุมระดับน้ำ อุณหภูมิ และปุ๋ยได้อย่างแม่นยำ เพื่อต้นกล้าที่แข็งแรงสมบูรณ์</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">ชุดเพาะทั้งหมดในระบบ</p>
+                        <h3 id="dash-total-lots" class="text-2xl font-bold text-slate-800 mt-1">0 ชุด</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">ยอดขายรวมทั้งหมด</p>
+                        <h3 id="dash-total-sales" class="text-2xl font-bold text-emerald-700 mt-1">฿0</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">วัสดุในสต็อกกลาง</p>
+                        <h3 id="dash-total-stock" class="text-2xl font-bold text-slate-800 mt-1">0 รายการ</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">ความชื้นสัมพัทธ์แปลง</p>
+                        <h3 class="text-2xl font-bold text-blue-600 mt-1">84% RH</h3>
                     </div>
                 </div>
-
-                <!-- สถิติภาพรวม 4 กล่อง -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-slate-500 font-medium">แปลงเพาะกล้าทั้งหมด</p>
-                            <h3 id="dash-total-lots" class="text-2xl font-bold text-slate-800 mt-1">0 แปลง</h3>
-                            <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">↑ พร้อมใช้งาน</span>
-                        </div>
-                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-layer-group"></i>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-slate-500 font-medium">ยอดขายรวมทั้งหมด</p>
-                            <h3 id="dash-total-sales" class="text-2xl font-bold text-emerald-700 mt-1">฿0</h3>
-                            <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">รายรับสะสม</span>
-                        </div>
-                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-money-bill-wave"></i>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-slate-500 font-medium">ความชื้นสัมพัทธ์ในแปลง</p>
-                            <h3 class="text-2xl font-bold text-blue-600 mt-1">84% RH</h3>
-                            <span class="text-[10px] text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded-full">ระบบควบคุมอัตโนมัติ</span>
-                        </div>
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-droplet"></i>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-slate-500 font-medium">วัสดุในสต็อกกลาง</p>
-                            <h3 id="dash-total-stock" class="text-2xl font-bold text-slate-800 mt-1">0 รายการ</h3>
-                            <span class="text-[10px] text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded-full">อัปเดตเรียบร้อย</span>
-                        </div>
-                        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-warehouse"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- การแจ้งเตือนและประกาศ -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                            <i class="fa-solid fa-chart-simple text-emerald-600"></i> สรุปการทำงานและสถานะระบบฟาร์ม
-                        </h3>
-                        <p class="text-sm text-slate-600 leading-relaxed">
-                            ระบบอัจฉริยะนี้ช่วยอำนวยความสะดวกตั้งแต่ขั้นตอนการจัดซื้อเมล็ดพันธุ์ การตรวจรับ ตลอดจนการเพาะปลูกในถาดและการจัดจำหน่าย ท่านสามารถเลือกเมนูด้านบนเพื่อดูรายละเอียด เพิ่ม แก้ไข และอัปเดตข้อมูลได้ทันที ข้อมูลทั้งหมดปลอดภัยและบันทึกอัตโนมัติ
-                        </p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                            <i class="fa-solid fa-bullhorn text-amber-500"></i> ประกาศแปลงเพาะกล้า
-                        </h3>
-                        <div class="space-y-3">
-                            <div class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl text-xs space-y-1">
-                                <p class="font-bold text-emerald-900"><i class="fa-solid fa-circle-check text-emerald-600"></i> ตรวจสอบระบบน้ำหยดแปลงที่ 3</p>
-                                <p class="text-emerald-700">ดำเนินการเรียบร้อยเมื่อ 2 ชม. ที่ผ่านมา</p>
-                            </div>
-                            <div class="p-3 bg-amber-50 border border-amber-100 rounded-xl text-xs space-y-1">
-                                <p class="font-bold text-amber-900"><i class="fa-solid fa-clock text-amber-600"></i> กำหนดเติมสารอาหาร ข้าวพันธุ์ กข79</p>
-                                <p class="text-amber-700">พรุ่งนี้ เวลา 08:30 น.</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-3">
+                    <h3 class="font-bold text-slate-800 text-lg">ระบบบริหารจัดการแปลงเพาะกล้าข้าวอัจฉริยะ</h3>
+                    <p class="text-sm text-slate-600">ท่านสามารถคลิกเมนูด้านซ้ายเพื่อจัดการข้อมูล เพิ่ม แก้ไข และอัปเดตสถานะของฟาร์มได้ทันที ข้อมูลทั้งหมดจะถูกบันทึกไว้อย่างปลอดภัยบนเครื่องของท่าน</p>
                 </div>
             </section>
 
@@ -199,7 +176,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">รายการสั่งซื้อเมล็ดพันธุ์ & วัสดุ</h3>
                         <p class="text-xs text-slate-500">จัดการคำสั่งซื้อเมล็ดพันธุ์ แกลบ และปุ๋ย</p>
                     </div>
-                    <button onclick="openFormModal('purchase')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มคำสั่งซื้อ</button>
+                    <button onclick="openFormModal('purchase')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มคำสั่งซื้อ</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -218,7 +195,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">ตรวจรับสินค้าเข้าคลัง</h3>
                         <p class="text-xs text-slate-500">บันทึกผลการตรวจสอบคุณภาพและจำนวนวัสดุ</p>
                     </div>
-                    <button onclick="openFormModal('receive')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มรายการตรวจรับ</button>
+                    <button onclick="openFormModal('receive')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มรายการตรวจรับ</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -237,7 +214,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">สต็อกวัสดุอุปกรณ์กลาง</h3>
                         <p class="text-xs text-slate-500">จัดการปริมาณวัสดุคงเหลือในคลัง</p>
                     </div>
-                    <button onclick="openFormModal('stock')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มวัสดุในสต็อก</button>
+                    <button onclick="openFormModal('stock')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มวัสดุในสต็อก</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -256,7 +233,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">บันทึกค่าใช้จ่ายประจำวัน</h3>
                         <p class="text-xs text-slate-500">บันทึกค่าน้ำมัน ค่าจ้าง และค่าดำเนินการต่างๆ</p>
                     </div>
-                    <button onclick="openFormModal('daily-expense')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มค่าใช้จ่าย</button>
+                    <button onclick="openFormModal('daily-expense')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มค่าใช้จ่าย</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -275,7 +252,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">กระบวนการลงดินและลงถาดเพาะกล้า</h3>
                         <p class="text-xs text-slate-500">บันทึกขั้นตอนการผสมวัสดุและบรรจุลงถาด</p>
                     </div>
-                    <button onclick="openFormModal('tray-prep')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มรอบการเตรียมถาด</button>
+                    <button onclick="openFormModal('tray-prep')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มรอบการเตรียมถาด</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -294,7 +271,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">บันทึกการเพาะปลูก (แปลงกล้า)</h3>
                         <p class="text-xs text-slate-500">จัดการข้อมูลสายพันธุ์ วันที่เพาะ และจำนวนถาด</p>
                     </div>
-                    <button onclick="openFormModal('nursery-records')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มรายการเพาะ</button>
+                    <button onclick="openFormModal('nursery-records')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มรายการเพาะ</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -313,7 +290,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">คาดการณ์รอบวันถอนกล้า & ผลผลิต</h3>
                         <p class="text-xs text-slate-500">คำนวณวันพร้อมปักดำและประเมินจำนวนกล้า</p>
                     </div>
-                    <button onclick="openFormModal('yield-forecast')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มการคาดการณ์</button>
+                    <button onclick="openFormModal('yield-forecast')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มการคาดการณ์</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -332,7 +309,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">กระบวนการตัดและแบ่งบรรจุต้นกล้า</h3>
                         <p class="text-xs text-slate-500">บันทึกจำนวนถาดต้นกล้าที่ตัดเพื่อส่งมอบ</p>
                     </div>
-                    <button onclick="openFormModal('harvest')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มรายการตัดกล้า</button>
+                    <button onclick="openFormModal('harvest')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มรายการตัดกล้า</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -351,7 +328,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">สต็อกต้นกล้าพร้อมจำหน่าย</h3>
                         <p class="text-xs text-slate-500">ตรวจสอบและอัปเดตกล้าไม้พร้อมขาย</p>
                     </div>
-                    <button onclick="openFormModal('ready-stock')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มสต็อกพร้อมขาย</button>
+                    <button onclick="openFormModal('ready-stock')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มสต็อกพร้อมขาย</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -370,7 +347,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">บันทึกการขายต้นกล้าข้าว</h3>
                         <p class="text-xs text-slate-500">บันทึกรายการขายและรายได้จากลูกค้า</p>
                     </div>
-                    <button onclick="openFormModal('sales-record')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มรายการขาย</button>
+                    <button onclick="openFormModal('sales-record')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มรายการขาย</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -389,7 +366,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">รายการรายได้รอรับ (ลูกหนี้การเกษตร)</h3>
                         <p class="text-xs text-slate-500">ติดตามยอดค้างชำระและกำหนดรับเงิน</p>
                     </div>
-                    <button onclick="openFormModal('pending-income')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มรายได้รอรับ</button>
+                    <button onclick="openFormModal('pending-income')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มรายได้รอรับ</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -408,7 +385,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">สมุดบัญชีรายรับ - รายจ่าย ฟาร์ม</h3>
                         <p class="text-xs text-slate-500">สรุปความเคลื่อนไหวทางการเงินประจำวัน</p>
                     </div>
-                    <button onclick="openFormModal('cashbook')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> เพิ่มรายการบัญชี</button>
+                    <button onclick="openFormModal('cashbook')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">เพิ่มรายการบัญชี</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <table class="w-full text-left text-sm">
@@ -427,7 +404,7 @@
                         <h3 class="font-bold text-slate-800 text-lg">บัญชีแยกประเภท (General Ledger)</h3>
                         <p class="text-xs text-slate-500">สรุปผลกำไรสุทธิและงบการเงินฟาร์ม</p>
                     </div>
-                    <button onclick="openFormModal('ledger')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md hover:bg-emerald-900 transition-all flex items-center gap-2"><i class="fa-solid fa-plus"></i> ปรับปรุงบัญชี</button>
+                    <button onclick="openFormModal('ledger')" class="bg-[#1b4d2e] text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md">ปรับปรุงบัญชี</button>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
                     <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex justify-between items-center">
@@ -443,53 +420,72 @@
                 </div>
             </section>
 
-        </div>
-    </main>
+        </main>
+    </div>
 
     <!-- GENERAL DYNAMIC MODAL -->
     <div id="form-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden">
             <div class="bg-[#1b4d2e] px-6 py-4 text-white flex justify-between items-center">
-                <h3 id="modal-title" class="font-bold text-sm">จัดการข้อมูล</h3>
-                <button onclick="closeFormModal()" class="text-emerald-200 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 id="modal-title" class="font-bold">จัดการข้อมูล</h3>
+                <button onclick="closeFormModal()" class="text-emerald-200 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6 space-y-4" id="modal-form-body">
-                <!-- ฟอร์มสร้างอัตโนมัติ -->
+                <!-- ฟอร์มจะถูกสร้างอัตโนมัติด้วย JavaScript -->
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT -->
     <script>
-        const tabList = [
-            'dashboard', 'purchase', 'receive', 'stock', 'daily-expense',
-            'tray-prep', 'nursery-records', 'yield-forecast', 'harvest',
-            'ready-stock', 'sales-record', 'pending-income', 'cashbook', 'ledger'
-        ];
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        const pageTitles = {
+            'dashboard': 'หน้าหลัก',
+            'purchase': 'สั่งซื้อเมล็ด/วัสดุ',
+            'receive': 'ตรวจรับสินค้า',
+            'stock': 'สต็อกกลาง',
+            'daily-expense': 'ค่าใช้จ่ายประจำวัน',
+            'tray-prep': 'ลงดิน/ลงถาดเพาะ',
+            'nursery-records': 'บันทึกการเพาะปลูก',
+            'yield-forecast': 'คาดการณ์ผลผลิต',
+            'harvest': 'ตัด & แบ่งบรรจุ',
+            'ready-stock': 'สต็อกรอจำหน่าย',
+            'sales-record': 'บันทึกการขาย',
+            'pending-income': 'รายได้รอรับ',
+            'cashbook': 'สมุดรายรับ-รายจ่าย',
+            'ledger': 'บัญชีแยกประเภท'
+        };
 
         function switchTab(tabId) {
-            tabList.forEach(id => {
-                const el = document.getElementById('tab-' + id);
-                if(el) el.classList.add('hidden');
-            });
-            const target = document.getElementById('tab-' + tabId);
-            if(target) target.classList.remove('hidden');
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            const targetTab = document.getElementById('tab-' + tabId);
+            if(targetTab) targetTab.classList.remove('hidden');
 
-            tabList.forEach(id => {
-                const btn = document.getElementById('btn-' + id);
-                if(btn) {
-                    btn.className = "nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-medium transition-all text-emerald-100 hover:bg-emerald-800/60 flex items-center gap-2";
-                }
+            document.getElementById('current-page-title').innerText = pageTitles[tabId] || 'ระบบฟาร์มเพาะกล้า';
+
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.className = "menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-emerald-100 hover:bg-emerald-800/50 hover:text-white transition-all";
             });
 
             const activeBtn = document.getElementById('btn-' + tabId);
             if(activeBtn) {
-                activeBtn.className = "nav-btn whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-semibold transition-all bg-[#6dbf43] text-emerald-950 shadow-sm flex items-center gap-2";
+                activeBtn.className = "menu-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all bg-[#6dbf43] text-emerald-950 shadow-md font-semibold";
+            }
+
+            if(window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebar-overlay').classList.add('hidden');
             }
         }
 
-        // Database with LocalStorage persistence
-        let db = JSON.parse(localStorage.getItem('smart_farm_db_v2')) || {
+        // Database simulation using LocalStorage
+        let db = JSON.parse(localStorage.getItem('smart_farm_db')) || {
             purchase: [
                 { id: 1, po: 'PO-2026-01', item: 'เมล็ดพันธุ์ข้าว กข79', qty: '200 กก.', status: 'รอส่งมอบ' }
             ],
@@ -533,7 +529,7 @@
         };
 
         function saveData() {
-            localStorage.setItem('smart_farm_db_v2', JSON.stringify(db));
+            localStorage.setItem('smart_farm_db', JSON.stringify(db));
             renderAllTables();
             updateDashboard();
         }
@@ -558,10 +554,6 @@
             const tbody = document.getElementById('table-' + tableKey);
             if(!tbody) return;
             tbody.innerHTML = '';
-            if(db[tableKey].length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-slate-400">ยังไม่มีข้อมูลในระบบ</td></tr>`;
-                return;
-            }
             db[tableKey].forEach((item, index) => {
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-all";
@@ -592,8 +584,9 @@
             body.innerHTML = '';
 
             let dataItem = index !== null ? db[tableKey][index] : {};
-            let fields = getFieldsDefinition(tableKey);
 
+            // สร้างฟอร์มตามตาราง
+            let fields = getFieldsDefinition(tableKey);
             fields.forEach(f => {
                 let val = dataItem[f.key] || '';
                 body.innerHTML += `
@@ -606,8 +599,8 @@
 
             body.innerHTML += `
                 <div class="flex justify-end space-x-2 pt-4">
-                    <button onclick="closeFormModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-sm font-medium hover:bg-slate-200 transition-all">ยกเลิก</button>
-                    <button onclick="submitForm()" class="px-4 py-2 rounded-xl bg-[#6dbf43] text-emerald-950 text-sm font-bold shadow-md hover:bg-emerald-500 transition-all">บันทึกข้อมูล</button>
+                    <button onclick="closeFormModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-sm font-medium">ยกเลิก</button>
+                    <button onclick="submitForm()" class="px-4 py-2 rounded-xl bg-[#6dbf43] text-emerald-950 text-sm font-bold shadow-md">บันทึกข้อมูล</button>
                 </div>
             `;
 
@@ -639,8 +632,7 @@
             let fields = getFieldsDefinition(tableKey);
             let newItem = {};
             fields.forEach(f => {
-                let el = document.getElementById('form-field-' + f.key);
-                let val = el ? el.value : '';
+                let val = document.getElementById('form-field-' + f.key).value;
                 newItem[f.key] = f.type === 'number' ? parseFloat(val) || 0 : val;
             });
 
@@ -675,7 +667,7 @@
             let totalSales = db['sales-record'].reduce((sum, item) => sum + (item.amount || 0), 0);
             let totalStock = db['stock'].length;
 
-            document.getElementById('dash-total-lots').innerText = totalLots + ' แปลง';
+            document.getElementById('dash-total-lots').innerText = totalLots + ' ชุด';
             document.getElementById('dash-total-sales').innerText = '฿' + totalSales.toLocaleString();
             document.getElementById('dash-total-stock').innerText = totalStock + ' รายการ';
             document.getElementById('ledger-net-profit').innerText = '฿' + totalSales.toLocaleString();
@@ -688,3 +680,4 @@
     </script>
 </body>
 </html>
+
