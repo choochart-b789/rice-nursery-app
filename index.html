@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบบริหารฟาร์มเพาะกล้าข้าวอัจฉริยะ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+        /* Custom Sidebar Color matching the reference image */
+        .bg-farm-dark { background-color: #1b3e2b; }
+        .bg-farm-light { background-color: #5bb343; }
+        .text-farm-light { color: #8cd977; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen relative overflow-x-hidden">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+        <div class="flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">
+                ☰
+            </button>
+            <h1 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                🌱 ฟาร์มเพาะกล้าข้าวอัจฉริยะ
+            </h1>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            เชื่อมต่อเครื่องเพาะกล้าแล้ว
+        </div>
+    </header>
+
+    <!-- Slide-out Sidebar Drawer (Replicating User Image) -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-20 hidden transition-opacity"></div>
+    
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-72 bg-farm-dark text-white z-30 transform -translate-x-full transition-transform duration-300 overflow-y-auto shadow-2xl">
+        <!-- Sidebar Header -->
+        <div class="p-5 border-b border-emerald-800/50 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-farm-light flex items-center justify-center text-xl shadow-md">
+                    🌾
+                </div>
+                <div>
+                    <h2 class="font-bold text-white text-base">ฟาร์มกล้าข้าว RD43</h2>
+                    <p class="text-xs text-emerald-300">☁️ ซิงค์ข้อมูลอัตโนมัติ</p>
+                </div>
+            </div>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white text-lg">✕</button>
+        </div>
+
+        <!-- Sidebar Navigation Menu -->
+        <nav class="p-4 space-y-6 text-sm">
+            <!-- Section: ภาพรวม -->
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">ภาพรวม</p>
+                <a href="#" onclick="switchTab('dashboard')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-farm-light text-white font-medium shadow-sm">
+                    📊 หน้าหลักแดชบอร์ด
+                </a>
+            </div>
+
+            <!-- Section: จัดซื้อ & สต็อก -->
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">จัดซื้อ & สต็อก</p>
+                <div class="space-y-1">
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">🛒 สั่งซื้อวัสดุปลูก/เมล็ดพันธุ์</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">📦 ตรวจรับสินค้าเข้าสต็อก</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">🗄️ สต็อกเมล็ดพันธุ์ & แกลบดำ</a>
+                </div>
+            </div>
+
+            <!-- Section: การผลิต -->
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">การผลิตกล้าข้าว</p>
+                <div class="space-y-1">
+                    <a href="#" onclick="switchTab('production')" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">🪴 บันทึกการลงถาด (เครื่องเพาะ)</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">🌱 ติดตามการเจริญเติบโต</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">📈 คาดการณ์วันถอนกล้า</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">✂️ คัดเกรด & จัดส่งรถดำนา</a>
+                </div>
+            </div>
+
+            <!-- Section: ขาย & บัญชี -->
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">บัญชี & การเงิน</p>
+                <div class="space-y-1">
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">🏷️ บันทึกการขายถาดกล้า</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">📕 สมุดรายรับ-รายจ่ายฟาร์ม</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-200 hover:bg-emerald-900/50">📗 วิเคราะห์ต้นทุนจริงต่อถาด</a>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="p-4 md:p-6 max-w-5xl mx-auto space-y-6">
+        
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 font-medium">ยอดผลิตถาดสะสม</p>
+                <h3 class="text-xl font-bold text-slate-800 mt-1">1,250 <span class="text-xs font-normal text-slate-500">ถาด</span></h3>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 font-medium">กล้าพร้อมลงนา (วันนี้)</p>
+                <h3 class="text-xl font-bold text-emerald-600 mt-1">320 <span class="text-xs font-normal text-slate-500">ถาด</span></h3>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 font-medium">สต็อกเมล็ดข้าว RD43</p>
+                <h3 class="text-xl font-bold text-slate-800 mt-1">85.5 <span class="text-xs font-normal text-slate-500">กก.</span></h3>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 font-medium">ต้นทุนเฉลี่ย/ถาด</p>
+                <h3 class="text-xl font-bold text-blue-600 mt-1">18.5 <span class="text-xs font-normal text-slate-500">บาท</span></h3>
+            </div>
+        </div>
+
+        <!-- Interactive Form Section: Connected to Conveyor Machine -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <h2 class="font-bold text-slate-800 text-base flex items-center gap-2 border-b pb-3">
+                ⚙️ ควบคุมและบันทึกการทำงานเครื่องเพาะกล้ากึ่งอัตโนมัติ
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">ความเร็วสายพาน (m/s):</label>
+                    <input type="number" step="0.01" value="0.15" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">อัตราโรยเมล็ดข้าว (g/ถาด):</label>
+                    <input type="number" id="seedPerTray" value="180" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">จำนวนถาดที่จะเพาะรอบนี้:</label>
+                    <input type="number" id="trayCount" value="50" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+            </div>
+
+            <button onclick="simulateProduction()" class="w-full bg-farm-light hover:bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-md transition duration-200 flex items-center justify-center gap-2">
+                🚀 เริ่มเดินเครื่องเพาะ และบันทึกตัดสต็อกอัตโนมัติ
+            </button>
+
+            <!-- Status Output Log -->
+            <div id="logOutput" class="hidden bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs space-y-1">
+                <p class="text-slate-400">=== รายงานการทำงานและตัดสต็อกวัสดุ ===</p>
+                <p id="logDetails"></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript Functionality -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function simulateProduction() {
+            const seed = parseFloat(document.getElementById('seedPerTray').value);
+            const trays = parseInt(document.getElementById('trayCount').value);
+            
+            const totalSeedKg = (seed * trays) / 1000.0;
+            const totalHuskKg = (trays * 0.8); // 800gแกลบดำต่อถาด
+
+            const logBox = document.getElementById('logOutput');
+            const logDetails = document.getElementById('logDetails');
+
+            logBox.classList.remove('hidden');
+            logDetails.innerHTML = `
+                ✅ ผลิตถาดกล้าข้าวสำเร็จ: ${trays} ถาด<br>
+                📉 ระบบตัดสต็อกเมล็ดพันธุ์ข้าว RD43: -${totalSeedKg.toFixed(2)} กก.<br>
+                📉 ระบบตัดสต็อกแกลบดำรองพื้น/กลบหน้า: -${totalHuskKg.toFixed(1)} กก.<br>
+                📅 คาดการณ์วันกล้าพร้อมถอนลงนา: อีก 14 วันข้างหน้า
+            `;
+        }
+    </script>
+</body>
+</html>
